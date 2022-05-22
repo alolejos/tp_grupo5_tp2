@@ -9,19 +9,25 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       cuit: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       password: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      phone: {
-        type: Sequelize.STRING
+      phone: Sequelize.STRING,
+      addressId: {
+        type: Sequelize.INTEGER,
+        references: { model: 'Addresses', key: 'id' },
       },
       createdAt: {
         allowNull: false,
