@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     phone: DataTypes.STRING,
     addressId: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       references: { model: 'Addresses', key: 'id' },
     }
   }, {

@@ -4,6 +4,7 @@ const {
   Model
 } = require('sequelize');
 const Paciente = require('./paciente');
+const MedicoPacientes = require('./medicopacientes');
 
 module.exports = (sequelize, DataTypes) => {
 
@@ -16,10 +17,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Medico.belongsTo(models.User, {
+      Medico.hasOne(models.User, {
         foreignKey: 'id'
       }),
-      Medico.belongsToMany(Paciente, {through: MedicoPacientes})     
+      Medico.belongsToMany(models.Paciente, {through: models.MedicoPacientes})     
       
       //Medico.hasMany(models.paciente, {
         //foreignKey: 'pacienteId'

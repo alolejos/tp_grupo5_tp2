@@ -13,12 +13,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   ObraSocial.init(
     {
-      id: DataTypes.INTEGER,
       name: DataTypes.STRING,
     },
     {
       sequelize,
       modelName: "ObraSocial",
+      tableName: "obras_sociales",
     }
   );
   return ObraSocial;
