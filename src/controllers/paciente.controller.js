@@ -81,6 +81,36 @@ exports.add = async (req,res) => {
     }
 }
 
+exports.delete = async (req,res) => {
+    let idPaciente = req.body.idPaciente;
+
+    //Obtengo el usuario por el ID y devuelvo los datos de emergencia
+    try {
+        //Busco al paciente por el ID
+        const paciente = await models.Paciente.findOne({
+            where: {
+                id: idPaciente
+            },
+            include: ['User']
+        });
+
+        console.log("Datos del paciente "+paciente);
+
+        if(paciente){
+            console.log("ID del usuario relacionado "+paciente.userId);
+
+            models.Paciente.destroy({where:{id:idPaciente}});
+            models.User.destroy({where:{id:paciente.userId}});
+            res.status(200).send('Paciente eliminado');
+        }else{
+            res.status(500).send("Paciente inexistente");
+        }
+    } catch (error) {
+        console.log("Error al eliminar al paciente"+error);
+        res.status(500).send(error);
+    }
+}
+
 exports.getPacienteById = async (req, res) => {
     let idPaciente = req.params.id;
 
