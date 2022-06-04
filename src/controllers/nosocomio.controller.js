@@ -1,8 +1,8 @@
 const models = require('../db/models');
 
-exports.getNosocomios = async (req, res) => {
+exports.getAll = async (req, res) => {
     try {
-        const nosocomios = await models.nosocomios.findAll({
+        const nosocomios = await models.nosocomio.findAll({
             include: ['User']
         });
 

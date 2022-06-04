@@ -1,8 +1,8 @@
 const nosocomios = require('../controllers/nosocomios.controller');
 const express = require('express');
 const router = express.Router();
+module.exports = router
 
-router.get("/getAll", async (res,req) => {
-    let nosocomiosArray = await nosocomios.getNosocomios();
-    res.send(nosocomiosArray);
-});
+router.get("/getAll", nosocomios.getAll);
+
+
