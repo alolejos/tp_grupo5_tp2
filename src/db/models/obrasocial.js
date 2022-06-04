@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   ObraSocial.init(
     {
-      id: DataTypes.INTEGER,
       name: DataTypes.STRING,
     },
     {
