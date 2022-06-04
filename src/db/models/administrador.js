@@ -8,14 +8,14 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Administrador.hasOne(models.User, { foreignKey: "id" });
     }
   }
-  Administrator.init(
+  Administrador.init(
     {
       userId: {
-        type: Sequelize.INTEGER,
-        references: { model: "Users", key: "id" },
+        type: DataTypes.INTEGER,
+        // references: { model: "Users", key: "id" },
         allowNull: false,
       },
     },
@@ -24,5 +24,5 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Administrador",
     }
   );
-  return Administrator;
+  return Administrador;
 };
