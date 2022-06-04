@@ -1,4 +1,4 @@
-const nosocomios = require('../controllers/nosocomios.controller');
+const nosocomios = require('../controllers/nosocomio.controller');
 const express = require('express');
 const router = express.Router();
 module.exports = router

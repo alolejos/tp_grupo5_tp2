@@ -6,13 +6,19 @@ module.exports = (sequelize, DataTypes) => {
   class Nosocomio extends Model {
 
     static associate(models) {
+
+      Nosocomio.hasOne(models.User, {
+        foreignKey: 'id'
+      })
       
-      Nosocomio.belongsToMany(models.paciente,{
-        through: 'NosocomioPaciente'        
+      Nosocomio.belongsToMany(models.Paciente,{
+        through: 'NosocomioPaciente',
+                
       })
 
-      Nosocomio.belongsToMany(models.medico,{
-        through: 'NosocomioMedico'
+      Nosocomio.belongsToMany(models.Medico,{
+        through: 'NosocomioMedico',
+        uniqueKey: 'nosocomioId'
       })
 
      }

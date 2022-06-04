@@ -10,8 +10,9 @@ module.exports = (sequelize, DataTypes) => {
       Medico.belongsTo(models.User, {
         foreignKey: 'id'
       },
-        Medico.belongsToMany(models.nosocomio, {
-          through: 'NosocomioMedico'
+        Medico.belongsToMany(models.Nosocomio, {
+          through: 'NosocomioMedico',
+          uniqueKey: 'medicoId'
         })
       )
 
