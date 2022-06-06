@@ -1,29 +1,30 @@
 const models = require('../db/models');
 
-exports.getAll = async (req, res) => {
+exports.getNosocomios = async (req, res) => {
     try {
         const nosocomios = await models.Nosocomio.findAll({
             include: ['User']
         });
 
         res.status(200).send(nosocomios);
-    } catch (error){
+    } catch (error) {
         console.log(error)
         res.status(500).send(error);
     }
 }
 
-exports.agregarMedicoAlStaff = async(req, res)=>{
-    let userId = req.body.userId;
-    let agregarMedicoAlStaff = req.body.agregarMedicoAlStaff;
-
+exports.getNosocomioById = async (req, res) => {
     try {
-        models.Nosocomio.post(
-            { agregarMedicoAlStaff: agregarMedicoAlStaff},
-            {where: {id: userId}}
-        )
-        res.status(200).send('Medico agregado');
-    } catch(error){
+        const nosocomio = await models.Nosocomio.findOne({
+            where: {
+                id: req.params.id
+            },
+            include: ['User']
+        });
+        res.status(200).send(nosocomio);
+    }
+    catch (error) {
         res.status(500).send(error);
     }
+
 }

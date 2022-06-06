@@ -3,6 +3,6 @@ const express = require('express');
 const router = express.Router();
 module.exports = router
 
-router.get("/getAll", nosocomios.getAll);
-
+router.get("/getAll", nosocomios.getNosocomios);
+router.get("/getById/:id", nosocomios.getNosocomioById);
 
