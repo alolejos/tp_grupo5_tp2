@@ -1,3 +1,4 @@
+const res = require('express/lib/response');
 const models = require('../db/models');
 
 exports.getNosocomios = async (req, res) => {
@@ -29,7 +30,7 @@ exports.getNosocomioById = async (req, res) => {
 
 }
 
-exports.add = async (req, res) => {
+exports.addNosocomio = async (req, res) => {
     let datosNosocomio = req.body;
 
     let bussinesName = datosNosocomio.bussinesName;
@@ -77,12 +78,13 @@ exports.add = async (req, res) => {
 }
 
 exports.deleteNosocomio = async (req, res) => {
-    let idNosocomio = req.body.idNosocomio;
+    let nosocomioId = req.body.nosocomioId;
+    console.log(nosocomioId);
     try {
         console.log("test")
         const nosocomio = await models.Nosocomio.findOne({
             where: {
-                id: idNosocomio
+                id: nosocomioId
             },
             include: ['User']
         });
@@ -90,7 +92,7 @@ exports.deleteNosocomio = async (req, res) => {
         console.log(nosocomio);
 
         if (nosocomio) {
-            models.Nosocomio.destroy({ where: { id: idNosocomio } });
+            models.Nosocomio.destroy({ where: { id: nosocomioId } });
             res.status(200).send('Nosocomio eliminado');
         } else {
             res.status(500).send('No existe');
@@ -98,5 +100,23 @@ exports.deleteNosocomio = async (req, res) => {
     }
     catch (error) {
         res.status(500).send('El nosocomio no existe');
+    }
+}
+
+
+exports.updateNosocomio = async (req, res) => {
+    let userId = req.body.userId;
+
+    try {
+        models.Nosocomio.update({
+            bussinesName: req.body.bussinesName
+        },
+            { where: { id: userId } })
+
+        res.status(200).send("Nosocomio actualizado");
+    }
+    catch (error) {
+        res.status(500).send(error);
+
     }
 }
