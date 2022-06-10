@@ -33,48 +33,62 @@ exports.getNosocomioById = async (req, res) => {
 exports.addNosocomio = async (req, res) => {
     let datosNosocomio = req.body;
 
-    let bussinesName = datosNosocomio.bussinesName;
-    let name = datosNosocomio.name;
-    let cuit = datosNosocomio.cuit;
-    let email = datosNosocomio.email;
-    let password = datosNosocomio.password;
-    let phone = datosNosocomio.phone;
-
-
-    //debería agregar validaciones
-
-    let usuario = {
-        name: name,
-        cuit: cuit,
-        email: email,
-        password: password,
-        phone: phone,
-        createdAt: new Date(),
-        updatedAt: new Date()
-    };
-
     try {
-        let userId;
-        models.User.create(usuario).then(function (resultado) {
-            userId = resultado.id;
+        const Nosocomio = await models.Nosocomio.findOne({
+            where: {
+                bussinesName: datosNosocomio.bussinesName
+            }
+        });
 
-            models.Nosocomio.create({
+        if (Nosocomio) {
+            res.status(500).send('Error: el Nosocomio ya existe');
+        } else {
 
-                userId: userId,
-                bussinesName: bussinesName,
+            let bussinesName = datosNosocomio.bussinesName;
+            let name = datosNosocomio.name;
+            let cuit = datosNosocomio.cuit;
+            let email = datosNosocomio.email;
+            let password = datosNosocomio.password;
+            let phone = datosNosocomio.phone;
+
+
+            //debería agregar validaciones
+
+            let usuario = {
+                name: name,
+                cuit: cuit,
+                email: email,
+                password: password,
+                phone: phone,
                 createdAt: new Date(),
                 updatedAt: new Date()
+            };
+
+            try {
+                let userId;
+                models.User.create(usuario).then(function (resultado) {
+                    userId = resultado.id;
+
+                    models.Nosocomio.create({
+
+                        userId: userId,
+                        bussinesName: bussinesName,
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    }
+                    ).then(function (resultado) {
+                        res.status(200).send('Nosocomio creado');
+                    });
+                });
             }
-            ).then(function (resultado) {
-                res.status(200).send('Nosocomio creado');
-            });
-        });
+            catch (error) {
+                res.status(500).send(error);
+            }
+        }
     }
     catch (error) {
         res.status(500).send(error);
     }
-
-
 }
 
 exports.deleteNosocomio = async (req, res) => {
