@@ -1,9 +1,10 @@
 const axios = require("axios");
 const chai = require("chai");
 const { assert } = chai;
+const { randCompanyName } = require("@ngneat/falso");
 
 describe("Creación Obra Social", () => {
-  let obraSocialName = "Sapo";
+  let obraSocialName = randCompanyName();
 
   it("retorna 201 si la obra social es guardada", (done) => {
     axios({
@@ -16,7 +17,7 @@ describe("Creación Obra Social", () => {
         done();
       })
       .catch((err) => {
-        assert.equal(err.response.status, 201);
+        assert.equal(err.response.status, 300);
         done();
       });
   });
