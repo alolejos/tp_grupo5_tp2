@@ -38,12 +38,12 @@ exports.add = async(req,res) => {
 
         const usuarioBuscado = await models.User.findOne({
             where: {
-                cuit: cuit
+                cuit: usuario.cuit
             }
         })
         //Intento crear el usuario
 
-        if(usuarioBuscado == null){
+        if(!usuarioBuscado){
             models.User.create(usuario).then(function(resultado){
                 //Recupero el ID atraves del resultado
                 userId = resultado.id;
@@ -57,15 +57,16 @@ exports.add = async(req,res) => {
                         updatedAt: new Date()
                     }
                 ).then(function(resultado){
-                    res.status(200).send('Medico creado');
-                });
+                    res.status(200).send({"message": 'Medico creado'});
+                })
             });
-        }else{
-            res.status(500).send('El Medico ya existe');
-        }
+         }
+        else{
+             res.status(500).send({"message" : "MEDICO EXISTE"});
+         }
     } catch (error) {
         console.log("Error al crear al medico " + error);
-        res.status(500).send(error);
+        res.status(500).send({"message": "Error al crear el médico."});
     }
 
 }

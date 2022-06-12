@@ -3,7 +3,7 @@ const chai = require("chai");
 const { assert } = chai;
 
 describe("Creación Obra Social", () => {
-  let obraSocialName = "Sapo";
+  let obraSocialName = "SapoPepe";
 
   it("retorna 201 si la obra social es guardada", (done) => {
     axios({
@@ -16,7 +16,7 @@ describe("Creación Obra Social", () => {
         done();
       })
       .catch((err) => {
-        assert.equal(err.response.status, 201);
+        assert.equal(err.response.status, 500);
         done();
       });
   });
