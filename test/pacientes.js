@@ -1,4 +1,4 @@
-const axios = require("axios");
+/* const axios = require("axios");
 const chai = require("chai");
 const { assert } = chai;
 const { randFirstName,randLastName,randPhoneNumber,randPassword,randEmail,randNumber, randStreetName, randCity, randCountry} = require('@ngneat/falso');
@@ -37,3 +37,4 @@ describe("Creación Paciente", () => {
     });
   });
 });
+ */

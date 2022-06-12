@@ -66,7 +66,7 @@ exports.addNosocomio = async (req, res) => {
 
             try {
                 let userId;
-                models.User.create(usuario).then(function (resultado) {
+                await models.User.create(usuario).then((resultado) => {
                     userId = resultado.id;
 
                     models.Nosocomio.create({
@@ -76,7 +76,7 @@ exports.addNosocomio = async (req, res) => {
                         createdAt: new Date(),
                         updatedAt: new Date()
                     }
-                    ).then(function (resultado) {
+                    ).then((resultado) => {
                         res.status(200).send('Nosocomio creado');
                     });
                 });
@@ -93,18 +93,13 @@ exports.addNosocomio = async (req, res) => {
 
 exports.deleteNosocomio = async (req, res) => {
     let nosocomioId = req.body.nosocomioId;
-    console.log(nosocomioId);
     try {
-        console.log("test")
         const nosocomio = await models.Nosocomio.findOne({
             where: {
                 id: nosocomioId
             },
             include: ['User']
         });
-        console.log("2d test")
-        console.log(nosocomio);
-
         if (nosocomio) {
             models.Nosocomio.destroy({ where: { id: nosocomioId } });
             res.status(200).send('Nosocomio eliminado');

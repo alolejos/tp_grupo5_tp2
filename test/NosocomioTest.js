@@ -1,22 +1,22 @@
 const axios = require('axios');
 const chai = require('chai');
 const { assert } = chai;
-const { randCompanyName } = require('@ngneat/falso');
+const { randCompanyName, randNumber, randFirstName, randPhoneNumber, randPassword, randEmail } = require('@ngneat/falso');
 
 // create a test for the nosocomio creation endpoint 
 describe("Test de creación", () => {
     let bussinesName = randCompanyName();
-    let name = "random";
-    let cuit = 1515151515;
-    let email = 'nosocomio@nosocomio.com';
-    let password = 555555555;
-    let phone = 15555533351;
+    let name = randFirstName();
+    let cuit = randNumber();
+    let email = randEmail();
+    let password = randPassword();
+    let phone = randPhoneNumber();
 
     it("Entra al test", (done) => {
         console.log("entra al test");
         axios({
             method: 'post',
-            url : 'http://localhost:5555/nosocomios/add',
+            url: 'http://localhost:5555/nosocomios/add',
             data: {
                 bussinesName: bussinesName,
                 name: name,
@@ -27,13 +27,31 @@ describe("Test de creación", () => {
             }
         }).then((response) => {
             assert.equal(response.status, 200);
-            console.log("se crea");
+            console.log("El usuario si se creó");
             done();
         }).catch((error) => {
             assert.equal(error.response.status, 500);
-            console.log("no se crea una chota");
+            console.log("El usuario no se creó");
             done();
         })
     })
 });
 
+it("Intenta eliminar", (done) => {
+    axios({
+        method: 'delete',
+        url: 'http://localhost:5555/nosocomios/delete',
+        data: {
+            nosocomioId: 71,
+        },
+    })
+        .then((response) => {
+            assert.equal(response.status, 200);
+            console.log("El nosocomio fue borrado");
+            done();
+        }).catch((error) => {
+            assert.equal(error.response.status, 500);
+            console.log("El nosocomio no existe");
+            done();
+        })
+});
