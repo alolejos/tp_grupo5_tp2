@@ -1,19 +1,30 @@
 'use strict';
-// const {
-//   User
-// } = require('sequelize');
-const {Model} = require('sequelize');
-const PacientesRepository = require('../../repositories/pacientesRepository');
+const {
+  Model
+} = require('sequelize');
+const Medico = require('./medico');
+const MedicoPacientes = require('./medicopacientes');
 module.exports = (sequelize, DataTypes) => {
+
   class Paciente extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
     static associate(models) {
+
 
       Paciente.hasOne(models.User, {foreignKey: 'id'});
       Paciente.belongsToMany(models.Nosocomio,{
         through: 'NosocomioPaciente',
         uniqueKey: 'pacienteId'
       });
+      Paciente.belongsToMany(models.Medico, {through: models.MedicoPacientes}),
+      Paciente.hasMany(models.Prescription)
   }}
+  
+
   Paciente.init({
     emergencyData: DataTypes.JSON,
     bloodType: DataTypes.STRING,
