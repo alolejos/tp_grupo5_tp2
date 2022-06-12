@@ -1,11 +1,18 @@
 'use strict';
+
 const {
   Model
 } = require('sequelize');
+const Paciente = require('./paciente');
+const MedicoPacientes = require('./medicopacientes');
+
 module.exports = (sequelize, DataTypes) => {
+
+  
   class Medico extends Model {
 
     static associate(models) {
+
 
       Medico.belongsTo(models.User, {
         foreignKey: 'id'
@@ -15,6 +22,15 @@ module.exports = (sequelize, DataTypes) => {
           uniqueKey: 'medicoId'
         })
       )
+      // define association here
+      Medico.hasOne(models.User, {
+        foreignKey: 'id'
+      }),
+      Medico.belongsToMany(models.Paciente, {through: models.MedicoPacientes})     
+      
+      //Medico.hasMany(models.paciente, {
+        //foreignKey: 'pacienteId'
+     // })
 
     }
   }
