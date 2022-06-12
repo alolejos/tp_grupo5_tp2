@@ -7,5 +7,6 @@ router.get("/getById/:id", nosocomios.getNosocomioById);
 router.post("/add", nosocomios.addNosocomio);
 router.delete("/delete", nosocomios.deleteNosocomio);
 router.patch("/update", nosocomios.updateNosocomio);
+router.post("/addMedicoAlNosocomio/:id", nosocomios.addMedicoAlNosocomio);
 
 module.exports = router

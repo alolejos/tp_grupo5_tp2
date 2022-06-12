@@ -1,5 +1,6 @@
 const res = require('express/lib/response');
 const models = require('../db/models');
+const metodos = require('./paciente.controller');
 
 exports.getNosocomios = async (req, res) => {
     try {
@@ -129,3 +130,16 @@ exports.updateNosocomio = async (req, res) => {
 
     }
 }
+
+/* exports.addMedicoAlNosocomio = async (req, res) => {
+   let id = await metodos.getPacienteById(req.params.id);
+
+    console.log("abajo debería estar el resultado de buscar el paciente");
+    console.log(id);
+
+    if(id) {
+        console.log("Esto funciona");        
+    }
+
+    res.status(200).send("está funcionando");
+} */
