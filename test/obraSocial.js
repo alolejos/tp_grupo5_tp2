@@ -17,7 +17,7 @@ describe("Creación Obra Social", () => {
         done();
       })
       .catch((err) => {
-        assert.equal(err.response.status, 300);
+        assert.equal(err.response.status, 500);
         done();
       });
   });
