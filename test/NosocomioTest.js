@@ -60,8 +60,8 @@ it("Trying to add a doctor to the hospital", (done) => {
         method: 'post',
         url: 'http://localhost:5555/nosocomios/addMedicoAlNosocomio',
         data: {
-            idNosocomio: 1,
-            idMedico: 2
+            idNosocomio: 3,
+            idMedico: 3
         }
     })
         .then((response) => {
