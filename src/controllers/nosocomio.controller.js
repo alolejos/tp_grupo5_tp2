@@ -165,13 +165,23 @@ exports.addMedicoAlNosocomio = async (req, res) => {
                 MedicoId: idMedico,
                 NosocomioId: idNosocomio
             }
-            models.NosocomioMedico.create(NosocomioMedico).then(function(){
-                res.status(200).send("El médico se agregó al nosocomio");
-            });
-        } else {
-            res.status(500).send(error + " - El médico no se agregó");
+
+
+            const relacionExistente = await models.NosocomioMedico.findOne({
+                where: {
+                    MedicoId: idMedico,
+                    NosocomioId: idNosocomio
+                }
+            })
+            if (!relacionExistente) {
+                models.NosocomioMedico.create(NosocomioMedico).then(function () {
+                    res.status(200).send("El médico se agregó al nosocomio");
+                });
+            } else {
+                res.status(208).send(error + "La relación ya existe");
+            }
         }
     } catch (error) {
-        res.status(500).send(error + " - El médico no se agregó");
+        res.status(500).send("La relación no se pudo concretar");
     }
 }

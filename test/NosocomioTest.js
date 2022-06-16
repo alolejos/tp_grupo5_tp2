@@ -55,3 +55,23 @@ it("Intenta eliminar", (done) => {
             done();
         })
 });
+
+it("Intenta agregar un médico al nosocomio", (done) => {
+    axios({
+        method: 'post',
+        url: 'http://localhost:5555/nosocomios/addMedicoAlNosocomio',
+        data: {
+            idNosocomio: 1,
+            idMedico: 2
+        }
+    })
+        .then((response) => {
+            assert.equal(response.status, 200);
+            console.log("El médico fue agregado");
+            done();
+        }).catch((error) => {
+            assert.equal(error.response.status, 500);
+            console.log(" El médico no fue agregado");
+            done();
+        })
+})
