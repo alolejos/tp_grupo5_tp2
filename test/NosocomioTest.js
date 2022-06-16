@@ -4,7 +4,7 @@ const { assert } = chai;
 const { randCompanyName, randNumber, randFirstName, randPhoneNumber, randPassword, randEmail } = require('@ngneat/falso');
 
 // create a test for the nosocomio creation endpoint 
-describe("Test de creación", () => {
+describe("Test", () => {
     let bussinesName = randCompanyName();
     let name = randFirstName();
     let cuit = randNumber();
@@ -12,8 +12,7 @@ describe("Test de creación", () => {
     let password = randPassword();
     let phone = randPhoneNumber();
 
-    it("Entra al test", (done) => {
-        console.log("entra al test");
+    it("Creation test", (done) => {
         axios({
             method: 'post',
             url: 'http://localhost:5555/nosocomios/add',
@@ -27,17 +26,17 @@ describe("Test de creación", () => {
             }
         }).then((response) => {
             assert.equal(response.status, 200);
-            console.log("El usuario si se creó");
+            console.log("The user was created");
             done();
         }).catch((error) => {
             assert.equal(error.response.status, 500);
-            console.log("El usuario no se creó");
+            console.log("The user was not created");
             done();
         })
     })
 });
 
-it("Intenta eliminar", (done) => {
+it("Trying to delete", (done) => {
     axios({
         method: 'delete',
         url: 'http://localhost:5555/nosocomios/delete',
@@ -47,16 +46,16 @@ it("Intenta eliminar", (done) => {
     })
         .then((response) => {
             assert.equal(response.status, 200);
-            console.log("El nosocomio fue borrado");
+            console.log("The hospital was deleted");
             done();
         }).catch((error) => {
             assert.equal(error.response.status, 500);
-            console.log("El nosocomio no existe");
+            console.log("The hospital does not exist");
             done();
         })
 });
 
-it("Intenta agregar un médico al nosocomio", (done) => {
+it("Trying to add a doctor to the hospital", (done) => {
     axios({
         method: 'post',
         url: 'http://localhost:5555/nosocomios/addMedicoAlNosocomio',
@@ -67,11 +66,11 @@ it("Intenta agregar un médico al nosocomio", (done) => {
     })
         .then((response) => {
             assert.equal(response.status, 200);
-            console.log("El médico fue agregado");
+            console.log("The doctor was added");
             done();
         }).catch((error) => {
             assert.equal(error.response.status, 500);
-            console.log(" El médico no fue agregado");
+            console.log("The doctor was not added");
             done();
         })
 })
