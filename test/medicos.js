@@ -3,7 +3,9 @@ const chai = require('chai');
 const { randFirstName,randLastName,randPhoneNumber,randPassword,randEmail,randNumber} = require('@ngneat/falso');
 const { assert } = chai;
 
+
 describe('Tests Varios sobre Medico', () => {
+
         
     let usuario = {
         name: randFirstName()+' '+randLastName(),
@@ -13,6 +15,8 @@ describe('Tests Varios sobre Medico', () => {
         phone: randPhoneNumber(),
         medicalLicense: "L" + randNumber({min: 111111, max: 999999})
       }
+
+
     it ('return 200 if Medico is saved', (done) => {
         axios({
             method : 'post',
@@ -60,7 +64,7 @@ describe('Tests Varios sobre Medico', () => {
             method : 'delete',
             url: 'http://localhost:5555/medicos/delete',
             data : {
-                id: 71
+                id: 69
             }
         }).then(response => {
             assert.equal(response.status, 200)
@@ -70,4 +74,21 @@ describe('Tests Varios sobre Medico', () => {
             done()
         })
     }) 
+
+    it ('returns 200 if Paciente is added', (done) => {
+        axios({
+            method: 'post',
+            url: 'http://localhost:5555/medicos/addPaciente',
+            data: {
+                id: 1,
+                pacienteId: 5
+            }
+        }).then(response => {
+            assert.equal(response.status, 200)
+            done()
+        }).catch(err => {
+            assert.equal(err.response.status, 500)
+            done()
+        })
+    })
 })
