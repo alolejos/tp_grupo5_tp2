@@ -158,3 +158,44 @@ exports.update = async (req,res) => {
         res.status(500).send(error);
     }
 }
+
+exports.addPaciente = async (req,res) => {
+    let medicoId = req.body.id;
+    let pacienteId = req.body.pacienteId;
+
+    const medico = await models.Medico.findOne({
+        where: {
+            id: medicoId
+        },
+    });
+
+    const paciente = await models.Paciente.findOne({
+        where: {
+            id: pacienteId
+        },
+    });
+
+    const relacion = await models.MedicoPacientes.findOne({
+        where: {
+            MedicoId: medico.id,
+            PacienteId: paciente.id
+        }
+    })
+
+    if(!relacion){
+        try {
+            models.MedicoPacientes.create({
+                MedicoId: medico.id,
+                PacienteId: paciente.id,
+            }
+            ).then(function(resultado){
+                return res.status(200).send('Paciente agregado');
+            })
+        } catch (error) {
+           return res.status(500).send('La relación entre médico y paciente ya existe.');
+        }
+    }else{
+        return res.status(500).send('La relación entre médico y paciente ya existe.');
+    }
+}
+    
