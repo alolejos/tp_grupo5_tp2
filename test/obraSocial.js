@@ -1,7 +1,7 @@
 const axios = require("axios");
 const chai = require("chai");
 const { assert } = chai;
-const { randCompanyName } = require("@ngneat/falso");
+const { randCompanyName, randNumber } = require("@ngneat/falso");
 
 describe("Creación Obra Social", () => {
   let obraSocialName = randCompanyName();
@@ -31,5 +31,23 @@ describe("Creación Obra Social", () => {
       assert.equal(err.response.data.message, "OBRA_SOCIAL_EXIST");
       done();
     });
+  });
+
+  it("retorna 200 si se borró la obra social", (done) => {
+    axios({
+      method: "delete",
+      url: "http://localhost:5555/obrasociales/delete",
+      data: {
+        id: randNumber({ min: 2, max: 49 }),
+      },
+    })
+      .then((response) => {
+        assert.equal(response.status, 200);
+        done();
+      })
+      .catch((err) => {
+        assert.equal(err.response.status, 500);
+        done();
+      });
   });
 });
