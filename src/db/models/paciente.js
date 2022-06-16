@@ -13,14 +13,18 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
-      Paciente.hasOne(models.User, {foreignKey: 'id'}),
+
+
+      Paciente.hasOne(models.User, {foreignKey: 'id'});
+      Paciente.belongsToMany(models.Nosocomio,{
+        through: 'NosocomioPaciente',
+        uniqueKey: 'pacienteId'
+      });
       Paciente.belongsToMany(models.Medico, {through: models.MedicoPacientes}),
       Paciente.hasMany(models.Prescription)
-      
+  }}
+  
 
-    }
-  }
   Paciente.init({
     emergencyData: DataTypes.JSON,
     bloodType: DataTypes.STRING,

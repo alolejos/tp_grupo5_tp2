@@ -10,12 +10,18 @@ module.exports = (sequelize, DataTypes) => {
 
   
   class Medico extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+
     static associate(models) {
+
+
+      Medico.belongsTo(models.User, {
+        foreignKey: 'id'
+      },
+        Medico.belongsToMany(models.Nosocomio, {
+          through: 'NosocomioMedico',
+          uniqueKey: 'medicoId'
+        })
+      )
       // define association here
       Medico.hasOne(models.User, {
         foreignKey: 'id'
@@ -26,17 +32,16 @@ module.exports = (sequelize, DataTypes) => {
         //foreignKey: 'pacienteId'
      // })
 
-
     }
   }
   Medico.init({
-    userId:{
+    userId: {
       type: DataTypes.INTEGER,
-      allowNull : false,
-    } ,
+      allowNull: false,
+    },
     medicalLicense: {
       type: DataTypes.STRING,
-      allowNull : false,
+      allowNull: false,
 
     }
   }, {

@@ -32,8 +32,9 @@ exports.getPacienteById = async (req, res) => {
 
 //Actualiza los datos del paciente
 exports.add = async (req,res) => {
-    console.log("Recibo datos del paciente");
     let datosPaciente = req.body;
+
+    console.log(datosPaciente);
 
     //Obtengo los campos del usuario
     let name = datosPaciente.name;
@@ -42,42 +43,53 @@ exports.add = async (req,res) => {
     let password = datosPaciente.password;
     let phone = datosPaciente.phone;
 
-    //Aca realizaria las validaciones
-
-    //Armo el objeto a insertar
-    console.log("Recibo datos del paciente");
-    let usuario = {
-        name: name,
-        cuit: cuit,
-        email: email,
-        password: password,
-        phone: phone,
-        createdAt: new Date(),
-        updatedAt: new Date()
-    };
-    
-    //Obtengo el usuario por el ID y devuelvo los datos de emergencia
+    //Aca realizaria las validaciones de si existe paciente por DNI
     try {
-        let userId;
-        //Intento crear el usuario
-        models.User.create(usuario).then(function(resultado){
-            //Recupero el ID atraves del resultado
-            userId = resultado.id;
-
-            //Creo el paciente con el userId
-            models.Paciente.create(
-                { 
-                    userId: userId,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                }
-            ).then(function(resultado){
-                res.status(200).send('Paciente creado');
-            });
+        //Busco si existe el usuario por el cuit
+        const usuario = await models.User.findOne({
+            where: {
+                cuit: cuit
+            }
         });
+
+        if(!usuario){
+            //Armo el objeto con datos del usuario
+            let usuario = {
+                name: name,
+                cuit: cuit,
+                email: email,
+                password: password,
+                phone: phone,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            };
+            
+            try {
+                //Creo al usuario y obtengo su ID
+                models.User.create(usuario).then(function(resultado){
+                    //Recupero el ID atraves del resultado
+                    let userId = resultado.id;
+
+                    //Creo el paciente con el userId
+                    models.Paciente.create(
+                        { 
+                            userId: userId,
+                            createdAt: new Date(),
+                            updatedAt: new Date()
+                        }
+                    ).then(function(resultado){
+                        res.status(201).send({"message": "Paciente creado"});
+
+                    });
+                });
+            } catch (error) {
+                res.status(500).send({"message": error});
+            }
+        }else{
+            res.status(500).send({"message": "El paciente ya existe"});
+        }
     } catch (error) {
-        console.log("Error al crear al paciente"+error);
-        res.status(500).send(error);
+        res.status(500).send({"message": error});
     }
 }
 
