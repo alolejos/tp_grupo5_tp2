@@ -53,9 +53,9 @@ exports.add = async (req, res) => {
       },
     });
 
-    if(obraSocial){
-      res.status(500).send({"message": "OBRA_SOCIAL_EXIST"});
-    }else{
+    if (obraSocial) {
+      res.status(500).send({ message: "OBRA_SOCIAL_EXIST" });
+    } else {
       //Obtengo los campos de la Obra Social
       let name = datosObraSocial.name;
       //Aca realizaria las validaciones
@@ -79,8 +79,6 @@ exports.add = async (req, res) => {
   } catch (error) {
     res.status(500).send(error);
   }
-
-
 };
 
 exports.delete = async (req, res) => {
