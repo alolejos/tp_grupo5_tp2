@@ -137,3 +137,23 @@ exports.update = async (req, res) => {
         }
     }
 }
+
+exports.getCuitAndIdPrescription = async (req, res) => {
+    try{
+        const randomUser = await models.User.findOne();
+        const randomPrescription = await models.Prescription.findOne();
+    
+        if(randomPrescription && randomUser){
+            const randomData = {
+                cuit: randomUser.cuit,
+                idPrescription: randomPrescription.id
+            }
+
+            res.status(200).send(randomData);
+        }else{
+            return res.status(500).send({message:"Error al obtener datos randoms"});
+        }
+    }catch(error){
+        return res.status(500).send(error);
+    }
+}
