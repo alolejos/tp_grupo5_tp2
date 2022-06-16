@@ -1,4 +1,4 @@
-/* const axios = require("axios");
+const axios = require("axios");
 const chai = require("chai");
 const { assert } = chai;
 const { randCompanyName, randNumber, randFirstName, randPhoneNumber, randPassword, randEmail } = require('@ngneat/falso');
@@ -34,4 +34,3 @@ describe("Creación Obra Social", () => {
     });
   });
 });
- */

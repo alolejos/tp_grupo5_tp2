@@ -8,7 +8,6 @@ exports.getNosocomios = async (req, res) => {
         const nosocomios = await models.Nosocomio.findAll({
             include: ['User']
         });
-
         res.status(200).send(nosocomios);
     } catch (error) {
         console.log(error)
@@ -18,7 +17,6 @@ exports.getNosocomios = async (req, res) => {
 
 exports.getNosocomioById = async (req, res) => {
     let id = req.body.id;
-
     try {
         const nosocomio = await models.Nosocomio.findOne({
             where: {
@@ -32,32 +30,25 @@ exports.getNosocomioById = async (req, res) => {
     catch (error) {
         res.status(500).send(error);
     }
-
 }
 
 exports.addNosocomio = async (req, res) => {
     let datosNosocomio = req.body;
-
     try {
         const Nosocomio = await models.Nosocomio.findOne({
             where: {
                 bussinesName: datosNosocomio.bussinesName
             }
         });
-
         if (Nosocomio) {
             res.status(500).send('Error: el Nosocomio ya existe');
         } else {
-
             let bussinesName = datosNosocomio.bussinesName;
             let name = datosNosocomio.name;
             let cuit = datosNosocomio.cuit;
             let email = datosNosocomio.email;
             let password = datosNosocomio.password;
             let phone = datosNosocomio.phone;
-
-
-            //debería agregar validaciones
 
             let usuario = {
                 name: name,
@@ -68,14 +59,11 @@ exports.addNosocomio = async (req, res) => {
                 createdAt: new Date(),
                 updatedAt: new Date()
             };
-
             try {
                 let userId;
                 await models.User.create(usuario).then((resultado) => {
                     userId = resultado.id;
-
                     models.Nosocomio.create({
-
                         userId: userId,
                         bussinesName: bussinesName,
                         createdAt: new Date(),
@@ -117,10 +105,8 @@ exports.deleteNosocomio = async (req, res) => {
     }
 }
 
-
 exports.updateNosocomio = async (req, res) => {
     let userId = req.body.userId;
-
     try {
         models.Nosocomio.update({
             bussinesName: req.body.bussinesName
@@ -139,18 +125,15 @@ exports.addMedicoAlNosocomio = async (req, res) => {
     console.log("Acá")
     let idMedico = req.body.idMedico;
     let idNosocomio = req.body.idNosocomio;
-
     try {
         const nosocomioBuscado = await models.Nosocomio.findOne({
             where: {
                 id: idNosocomio
             },
         });
-
         console.log("----------Aca abajo esta el Nosocomio")
         console.log("Nosocomio: " + nosocomioBuscado);
         console.log("----------Aca arriba esta el Nosocomio")
-
         const medicoBuscado = await models.Medico.findOne({
             where: {
                 id: idMedico
@@ -165,8 +148,6 @@ exports.addMedicoAlNosocomio = async (req, res) => {
                 MedicoId: idMedico,
                 NosocomioId: idNosocomio
             }
-
-
             const relacionExistente = await models.NosocomioMedico.findOne({
                 where: {
                     MedicoId: idMedico,
