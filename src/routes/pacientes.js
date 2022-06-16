@@ -8,6 +8,8 @@ router.get("/getAll", pacientes.getPacientes);
 router.get("/getById/:id", pacientes.getPacienteById);
 //Obtengo un paciente por cuit
 router.get("/getByCuit/:cuit", pacientes.getPacienteByCuit);
+//Obtengo 2 pacientes randoms para pruebas
+router.get("/getDosPacientesRandoms", pacientes.getDosPacientesRandoms);
 
 //Creo un paciente
 router.post("/add", pacientes.add);

@@ -38,71 +38,68 @@ describe("Creación Paciente", () => {
   });
 });
 
-//Declaro pacienteId para usarlo en las pruebas siguientes
-let pacienteId;
-
-describe("Obtengo el ID de paciente con el CUIT generado en el metodo anterior para realizar las demas acciones", () => {
-  it("retorna 200 si el paciente se encontro por el CUIT", (done) => {
+describe("Obtengo un paciente random para actualizara los datos de emergencia y otro paciente random para eliminarlo", () => {
+  it("Retorna 200 si se pudo actualizar los datos de emergencia", (done) => {
     axios({
       method: "get",
-      url: "http://localhost:5555/pacientes/getByCuit/"+usuario.cuit
+      url: "http://localhost:5555/pacientes/getDosPacientesRandoms",
     }).then(function(response){
       assert.equal(response.status, 200);
-      if(response.data.id){
-        pacienteId = response.data.id;
+      if(response.status == 200 && response.data){
+        const objActualizacionDatosEmergencia = {
+          pacienteId: response.data.pacienteRandom1,
+          emergencyData: JSON.stringify(randText()),
+          bloodType: 'A+',
+          birthDate: randPastDate()
+        }
+
+        axios({
+          method: "patch",
+          url: "http://localhost:5555/pacientes/updateProfile",
+          data: objActualizacionDatosEmergencia,
+        }).then(function(response){
+          assert.equal(response.status, 200);
+          done();
+        }).catch((err) => {
+          assert.equal(err.response.data.message, "Error al actualizar los datos del paciente");
+          done();
+        });
       }
       done();
     }).catch((err) => {
-      assert.equal(err.response.data.message, "No se encontró el usuario con el cuit");
+      assert.equal(err.response.data.message, "Error al actualizar los datos del paciente");
       done();
     });
-  });
+  });  
 });
 
-// const objActualizacionDatosEmergencia = {
-//   pacienteId: pacienteId,
-//   emergencyData: JSON.stringify(randText()),
-//   bloodType: 'A+',
-//   birthDate: randPastDate()
-// }
+// describe("Obtengo el ID de paciente con el CUIT generado en el metodo anterior y lo elimino", () => {
+//   //Declaro pacienteId para usarlo en las pruebas siguientes
+//   let pacienteId;
 
-// describe("Actualizo los datos de emergencia del paciente", () => {
-//   it("Retorna 200 si se pudo actualizar los datos de emergencia", (done) => {
+//   it("Retorna 200 si el paciente random fue eliminado", (done) => {
 //     axios({
-//       method: "patch",
-//       url: "http://localhost:5555/pacientes/updateProfile",
-//       data: objActualizacionDatosEmergencia,
+//       method: "get",
+//       url: "http://localhost:5555/pacientes/getByCuit/"+usuario.cuit
 //     }).then(function(response){
 //       assert.equal(response.status, 200);
-//       done();
+//       if(response.data.id){
+//         pacienteId = response.data.id;
+
+//         axios({
+//           method: "delete",
+//           url: "http://localhost:5555/pacientes/deleteById/"+pacienteId
+//         }).then(function(response){
+//           assert.equal(response.status, 200);
+//           done();
+//         }).catch((err) => {
+//           assert.equal(err.response.data.message, "Paciente inexistente");
+//           done();
+//         });
+//       }
 //     }).catch((err) => {
-//       assert.equal(err.response.data.message, "Error al actualizar los datos del paciente");
+//       assert.equal(err.response.data.message, "No se encontró el usuario con el cuit");
 //       done();
 //     });
-//   });  
+//   });
 // });
-
-describe("Obtengo el ID de paciente con el CUIT generado en el metodo anterior y lo elimino", () => {
-  it("Retorna 200 si el paciente pudo eliminarse", (done) => {
-    axios({
-      method: "delete",
-      url: "http://localhost:5555/pacientes/deleteById/"+pacienteId
-    }).then(function(response){
-      assert.equal(response.status, 200);
-      done();
-    }).catch((err) => {
-      assert.equal(err.response.data.message, "Paciente inexistente");
-      done();
-    });
-  });
-  
-  it("Retorna error si el paciente no pudo eliminarse", (done) => {
-    axios({
-      method: "delete",
-      url: "http://localhost:5555/pacientes/deleteById/"+pacienteId
-    }).catch((err) => {
-      assert.equal(err.response.data.message, "Paciente inexistente");
-      done();
-    });
-  });
-});

@@ -169,6 +169,27 @@ exports.updateProfile = async (req,res) => {
     }
 }
 
+exports.getDosPacientesRandoms = async (req, res) => {
+    try{
+        const pacienteRandom1 = await models.Paciente.findOne();
+        let siguienteId = pacienteRandom1.id + 1;    
+        const pacienteRandom2 = await models.Paciente.findOne({where: {id: siguienteId}});
+    
+        if(pacienteRandom1 && pacienteRandom2 ){
+            const randomData = {
+                pacienteRandom1: pacienteRandom1.id,
+                pacienteRandom2: pacienteRandom2.id
+            }
+
+            res.status(200).send(randomData);
+        }else{
+            return res.status(500).send({message:"Error al obtener datos randoms"});
+        }
+    }catch(error){
+        return res.status(500).send(error);
+    }
+}
+
 async function searchUserByCuit(cuit){
     const usuario = await models.User.findOne({where: {cuit: cuit}});
     return usuario;

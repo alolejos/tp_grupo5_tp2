@@ -16,14 +16,12 @@ exports.getNosocomios = async (req, res) => {
 }
 
 exports.getNosocomioById = async (req, res) => {
-    let id = req.body.id;
     try {
         const nosocomio = await models.Nosocomio.findOne({
             where: {
-                id: req.body.id
+                id: req.params.id
             },
-            include: ['User'],
-            include: ['Medico']
+            include: ['User']
         });
         res.status(200).send(nosocomio);
     }
