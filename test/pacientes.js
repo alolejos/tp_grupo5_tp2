@@ -65,7 +65,6 @@ describe("Obtengo un paciente random para actualizara los datos de emergencia y 
           done();
         });
       }
-      done();
     }).catch((err) => {
       assert.equal(err.response.data.message, "Error al actualizar los datos del paciente");
       done();
@@ -73,33 +72,34 @@ describe("Obtengo un paciente random para actualizara los datos de emergencia y 
   });  
 });
 
-// describe("Obtengo el ID de paciente con el CUIT generado en el metodo anterior y lo elimino", () => {
-//   //Declaro pacienteId para usarlo en las pruebas siguientes
-//   let pacienteId;
+describe("Obtengo el ID de paciente con el CUIT generado en el metodo anterior y lo elimino", () => {
+  //Declaro pacienteId para usarlo en las pruebas siguientes
+  let pacienteId;
 
-//   it("Retorna 200 si el paciente random fue eliminado", (done) => {
-//     axios({
-//       method: "get",
-//       url: "http://localhost:5555/pacientes/getByCuit/"+usuario.cuit
-//     }).then(function(response){
-//       assert.equal(response.status, 200);
-//       if(response.data.id){
-//         pacienteId = response.data.id;
+  it("Retorna 200 si el paciente random fue eliminado", (done) => {
+    axios({
+      method: "get",
+      url: "http://localhost:5555/pacientes/getByCuit/"+usuario.cuit
+    }).then(function(response){
+      assert.equal(response.status, 200);
 
-//         axios({
-//           method: "delete",
-//           url: "http://localhost:5555/pacientes/deleteById/"+pacienteId
-//         }).then(function(response){
-//           assert.equal(response.status, 200);
-//           done();
-//         }).catch((err) => {
-//           assert.equal(err.response.data.message, "Paciente inexistente");
-//           done();
-//         });
-//       }
-//     }).catch((err) => {
-//       assert.equal(err.response.data.message, "No se encontró el usuario con el cuit");
-//       done();
-//     });
-//   });
-// });
+      if(response.data){
+        pacienteId = response.data.id;
+
+        axios({
+          method: "delete",
+          url: "http://localhost:5555/pacientes/deleteById/"+pacienteId
+        }).then(function(response){
+          assert.equal(response.status, 200);
+          done();
+        }).catch((err) => {
+          assert.equal(err.response.data.message, "Paciente inexistente");
+          done();
+        });
+      }
+    }).catch((err) => {
+      assert.equal(err.response.data.message, "No se encontró el usuario con el cuit");
+      
+    });
+  });
+});
