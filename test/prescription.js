@@ -4,13 +4,10 @@ const {randNumber} = require('@ngneat/falso');
 const { assert } = chai;
 
 describe ('Tests Varios sobre Prescription', () => {
-
-    
-    
     let details = "En todas las recetas médicas debería agregar el nombre del medicamento, la dosis e instrucciones de toma";
     let affiliateNumber = randNumber({min: 111111, max: 999999});
-    let cuit = "43-21982062-91";
-    let idPrescription = 20;
+    let cuit = "71-61661349-54";
+    let idPrescription = randNumber({min: 1, max: 50});
 
     it ('return 200 if Prescription is added', (done) => {
         axios({
