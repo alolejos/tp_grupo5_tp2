@@ -4,16 +4,25 @@ module.exports = {
     await queryInterface.createTable('NosocomioMedicos', {
       nosocomioId: {
         type: Sequelize.INTEGER,
-        References: { 
-          model:'nosocomios',
+        References: {
+          model: 'nosocomios',
           key: 'id'
-        }},
+        }
+      },
       medicoId: {
         type: Sequelize.INTEGER,
         References: {
-        model:'medicos',
-        key: 'id'
-      }
+          model: 'medicos',
+          key: 'id'
+        }
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
       }
     });
   },

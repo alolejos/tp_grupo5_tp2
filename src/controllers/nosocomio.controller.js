@@ -1,12 +1,13 @@
 const res = require('express/lib/response');
 const models = require('../db/models');
+const nosocomiomedico = require('../db/models/nosocomiomedico');
+const metodos = require('./medico.controller');
 
 exports.getNosocomios = async (req, res) => {
     try {
         const nosocomios = await models.Nosocomio.findAll({
             include: ['User']
         });
-
         res.status(200).send(nosocomios);
     } catch (error) {
         console.log(error)
@@ -15,44 +16,39 @@ exports.getNosocomios = async (req, res) => {
 }
 
 exports.getNosocomioById = async (req, res) => {
+    let id = req.body.id;
     try {
         const nosocomio = await models.Nosocomio.findOne({
             where: {
-                id: req.params.id
+                id: req.body.id
             },
-            include: ['User']
+            include: ['User'],
+            include: ['Medico']
         });
         res.status(200).send(nosocomio);
     }
     catch (error) {
         res.status(500).send(error);
     }
-
 }
 
 exports.addNosocomio = async (req, res) => {
     let datosNosocomio = req.body;
-
     try {
         const Nosocomio = await models.Nosocomio.findOne({
             where: {
                 bussinesName: datosNosocomio.bussinesName
             }
         });
-
         if (Nosocomio) {
             res.status(500).send('Error: el Nosocomio ya existe');
         } else {
-
             let bussinesName = datosNosocomio.bussinesName;
             let name = datosNosocomio.name;
             let cuit = datosNosocomio.cuit;
             let email = datosNosocomio.email;
             let password = datosNosocomio.password;
             let phone = datosNosocomio.phone;
-
-
-            //debería agregar validaciones
 
             let usuario = {
                 name: name,
@@ -63,20 +59,17 @@ exports.addNosocomio = async (req, res) => {
                 createdAt: new Date(),
                 updatedAt: new Date()
             };
-
             try {
                 let userId;
-                models.User.create(usuario).then(function (resultado) {
+                await models.User.create(usuario).then((resultado) => {
                     userId = resultado.id;
-
                     models.Nosocomio.create({
-
                         userId: userId,
                         bussinesName: bussinesName,
                         createdAt: new Date(),
                         updatedAt: new Date()
                     }
-                    ).then(function (resultado) {
+                    ).then((resultado) => {
                         res.status(200).send('Nosocomio creado');
                     });
                 });
@@ -93,18 +86,13 @@ exports.addNosocomio = async (req, res) => {
 
 exports.deleteNosocomio = async (req, res) => {
     let nosocomioId = req.body.nosocomioId;
-    console.log(nosocomioId);
     try {
-        console.log("test")
         const nosocomio = await models.Nosocomio.findOne({
             where: {
                 id: nosocomioId
             },
             include: ['User']
         });
-        console.log("2d test")
-        console.log(nosocomio);
-
         if (nosocomio) {
             models.Nosocomio.destroy({ where: { id: nosocomioId } });
             res.status(200).send('Nosocomio eliminado');
@@ -117,10 +105,8 @@ exports.deleteNosocomio = async (req, res) => {
     }
 }
 
-
 exports.updateNosocomio = async (req, res) => {
     let userId = req.body.userId;
-
     try {
         models.Nosocomio.update({
             bussinesName: req.body.bussinesName
@@ -132,5 +118,51 @@ exports.updateNosocomio = async (req, res) => {
     catch (error) {
         res.status(500).send(error);
 
+    }
+}
+
+exports.addMedicoAlNosocomio = async (req, res) => {
+    console.log("Acá")
+    let idMedico = req.body.idMedico;
+    let idNosocomio = req.body.idNosocomio;
+    try {
+        const nosocomioBuscado = await models.Nosocomio.findOne({
+            where: {
+                id: idNosocomio
+            },
+        });
+        console.log("----------Aca abajo esta el Nosocomio")
+        console.log("Nosocomio: " + nosocomioBuscado);
+        console.log("----------Aca arriba esta el Nosocomio")
+        const medicoBuscado = await models.Medico.findOne({
+            where: {
+                id: idMedico
+            },
+        });
+        console.log("----------Aca abajo esta el medico")
+        console.log("Medico: " + medicoBuscado);
+        console.log("----------Aca arriba esta el medico")
+
+        if (nosocomioBuscado && medicoBuscado) {
+            const NosocomioMedico = {
+                MedicoId: idMedico,
+                NosocomioId: idNosocomio
+            }
+            const relacionExistente = await models.NosocomioMedico.findOne({
+                where: {
+                    MedicoId: idMedico,
+                    NosocomioId: idNosocomio
+                }
+            })
+            if (!relacionExistente) {
+                models.NosocomioMedico.create(NosocomioMedico).then(function () {
+                    res.status(200).send("El médico se agregó al nosocomio");
+                });
+            } else {
+                res.status(208).send(error + "La relación ya existe");
+            }
+        }
+    } catch (error) {
+        res.status(500).send("La relación no se pudo concretar");
     }
 }

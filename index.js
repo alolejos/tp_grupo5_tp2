@@ -17,5 +17,8 @@ app.use("/nosocomios", nosocomiosRouter);
 app.use("/farmacias", farmaciasRouter);
 app.use("/medicos", medicosRouter);
 
+app.use("/medicos", medicosRouter);
+app.use('/nosocomios', nosocomiosRouter);
+
 //Escucho el puerto 5555
 app.listen(5555);
