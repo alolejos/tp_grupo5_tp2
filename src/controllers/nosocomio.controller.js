@@ -162,8 +162,8 @@ exports.addMedicoAlNosocomio = async (req, res) => {
 
         if (nosocomioBuscado && medicoBuscado) {
             const NosocomioMedico = {
-                medicoId: idMedico,
-                nosocomioId: idNosocomio
+                MedicoId: idMedico,
+                NosocomioId: idNosocomio
             }
             models.NosocomioMedico.create(NosocomioMedico).then(function(){
                 res.status(200).send("El médico se agregó al nosocomio");
