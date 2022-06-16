@@ -1,8 +1,7 @@
 const axios = require("axios");
 const chai = require("chai");
 const { assert } = chai;
-const { randCompanyName, randNumber, randFirstName, randPhoneNumber, randPassword, randEmail } = require('@ngneat/falso');
-
+const { randCompanyName } = require("@ngneat/falso");
 
 describe("Creación Obra Social", () => {
   let obraSocialName = randCompanyName();
@@ -14,7 +13,7 @@ describe("Creación Obra Social", () => {
       data: { name: obraSocialName },
     })
       .then((response) => {
-        assert.equal(response.status, 200);
+        assert.equal(response.status, 201);
         done();
       })
       .catch((err) => {
