@@ -72,7 +72,7 @@ exports.add = async(req,res) => {
 }
 
 exports.getMedicoById = async (req, res) => {
-    let idMedico = req.params.id;
+    let idMedico = req.body.id;
 
     try {
         const medicoBuscado = await models.Medico.findOne({

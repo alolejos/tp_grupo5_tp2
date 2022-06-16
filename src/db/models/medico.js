@@ -8,7 +8,7 @@ const MedicoPacientes = require('./medicopacientes');
 
 module.exports = (sequelize, DataTypes) => {
 
-  
+
   class Medico extends Model {
 
     static associate(models) {
@@ -26,11 +26,11 @@ module.exports = (sequelize, DataTypes) => {
       Medico.hasOne(models.User, {
         foreignKey: 'id'
       }),
-      Medico.belongsToMany(models.Paciente, {through: models.MedicoPacientes})     
-      
+        Medico.belongsToMany(models.Paciente, { through: models.MedicoPacientes })
+
       //Medico.hasMany(models.paciente, {
-        //foreignKey: 'pacienteId'
-     // })
+      //foreignKey: 'pacienteId'
+      // })
 
     }
   }

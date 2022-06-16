@@ -1,6 +1,7 @@
 const res = require('express/lib/response');
 const models = require('../db/models');
-const metodos = require('./paciente.controller');
+const nosocomiomedico = require('../db/models/nosocomiomedico');
+const metodos = require('./medico.controller');
 
 exports.getNosocomios = async (req, res) => {
     try {
@@ -16,12 +17,15 @@ exports.getNosocomios = async (req, res) => {
 }
 
 exports.getNosocomioById = async (req, res) => {
+    let id = req.body.id;
+
     try {
         const nosocomio = await models.Nosocomio.findOne({
             where: {
-                id: req.params.id
+                id: req.body.id
             },
-            include: ['User']
+            include: ['User'],
+            include: ['Medico']
         });
         res.status(200).send(nosocomio);
     }
@@ -131,15 +135,43 @@ exports.updateNosocomio = async (req, res) => {
     }
 }
 
-/* exports.addMedicoAlNosocomio = async (req, res) => {
-   let id = await metodos.getPacienteById(req.params.id);
+exports.addMedicoAlNosocomio = async (req, res) => {
+    console.log("Acá")
+    let idMedico = req.body.idMedico;
+    let idNosocomio = req.body.idNosocomio;
 
-    console.log("abajo debería estar el resultado de buscar el paciente");
-    console.log(id);
+    try {
+        const nosocomioBuscado = await models.Nosocomio.findOne({
+            where: {
+                id: idNosocomio
+            },
+        });
 
-    if(id) {
-        console.log("Esto funciona");        
+        console.log("----------Aca abajo esta el Nosocomio")
+        console.log("Nosocomio: " + nosocomioBuscado);
+        console.log("----------Aca arriba esta el Nosocomio")
+
+        const medicoBuscado = await models.Medico.findOne({
+            where: {
+                id: idMedico
+            },
+        });
+        console.log("----------Aca abajo esta el medico")
+        console.log("Medico: " + medicoBuscado);
+        console.log("----------Aca arriba esta el medico")
+
+        if (nosocomioBuscado && medicoBuscado) {
+            const NosocomioMedico = {
+                medicoId: idMedico,
+                nosocomioId: idNosocomio
+            }
+            models.NosocomioMedico.create(NosocomioMedico).then(function(){
+                res.status(200).send("El médico se agregó al nosocomio");
+            });
+        } else {
+            res.status(500).send(error + " - El médico no se agregó");
+        }
+    } catch (error) {
+        res.status(500).send(error + " - El médico no se agregó");
     }
-
-    res.status(200).send("está funcionando");
-} */
+}

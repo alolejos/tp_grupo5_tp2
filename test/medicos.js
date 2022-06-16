@@ -1,4 +1,4 @@
-const axios = require('axios')
+/* const axios = require('axios')
 const chai = require('chai');
 const { randFirstName,randLastName,randPhoneNumber,randPassword,randEmail,randNumber} = require('@ngneat/falso');
 const { assert } = chai;
@@ -71,3 +71,4 @@ describe('Tests Varios sobre Medico', () => {
         })
     }) 
 })
+ */

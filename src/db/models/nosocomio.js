@@ -13,14 +13,13 @@ module.exports = (sequelize, DataTypes) => {
       
       Nosocomio.belongsToMany(models.Paciente,{
         through: 'NosocomioPaciente',
-                
+        uniqueKey: 'nosocomioId'                
       })
 
       Nosocomio.belongsToMany(models.Medico,{
         through: 'NosocomioMedico',
         uniqueKey: 'nosocomioId'
-      })
-
+      }) 
      }
   }
   Nosocomio.init({
