@@ -23,7 +23,6 @@ exports.getPacienteById = async (req, res) => {
             include: ['User']
         });
 
-        console.log("paciente"+paciente);
         res.status(200).send(paciente);
     } catch (error){
         res.status(500).send(error);
@@ -33,21 +32,28 @@ exports.getPacienteById = async (req, res) => {
 exports.getPacienteByCuit = async (req, res) => {
     let cuit = req.params.cuit;
 
-    let user = searchUserByCuit(cuit);
-    if(user){
-        res.status(200).send(user);
-    }else{
-        res.status(204).send('No se encontró el paciente con el cuit');
-    }
+    try{
+        let user = await searchUserByCuit(cuit);
     
+        if(user){
+            const paciente = await models.Paciente.findOne({where: {userId: user.id}});
 
+            if(paciente){
+                res.status(200).send(paciente);
+            }else{
+                res.status(204).send('Error al obtener el paciente');
+            }
+        }else{
+            res.status(204).send('No se encontró el paciente con el cuit');
+        }
+    }catch(error){
+        res.status(500).send(error);
+    }
 }
 
 //Actualiza los datos del paciente
 exports.add = async (req,res) => {
     let datosPaciente = req.body;
-
-    console.log(datosPaciente);
 
     //Obtengo los campos del usuario
     let name = datosPaciente.name;
@@ -58,7 +64,7 @@ exports.add = async (req,res) => {
 
     //Aca realizaria las validaciones de si existe paciente por DNI
     //Busco si existe el usuario por el cuit
-    let usuario = searchUserByCuit(cuit);
+    let usuario = await searchUserByCuit(cuit);
 
     if(!usuario){
         //Armo el objeto con datos del usuario
@@ -111,19 +117,14 @@ exports.deleteById = async (req,res) => {
             include: ['User']
         });
 
-        console.log("Datos del paciente "+paciente);
-
         if(paciente){
-            console.log("ID del usuario relacionado "+paciente.userId);
-
             models.Paciente.destroy({where:{id:idPaciente}});
             models.User.destroy({where:{id:paciente.userId}});
             res.status(200).send('Paciente eliminado');
         }else{
-            res.status(500).send("Paciente inexistente");
+            res.status(500).send({"message": "Paciente inexistente"});
         }
-    } catch (error) {
-        console.log("Error al eliminar al paciente"+error);
+    }catch (error){
         res.status(500).send(error);
     }
 }
@@ -139,7 +140,6 @@ exports.getPacienteById = async (req, res) => {
             include: ['User']
         });
 
-        console.log("paciente"+paciente);
         res.status(200).send(paciente);
     } catch (error){
         res.status(500).send(error);
@@ -148,24 +148,28 @@ exports.getPacienteById = async (req, res) => {
 
 //Actualiza los datos del paciente
 exports.updateProfile = async (req,res) => {
-    let userId = req.body.userId;
+    let pacienteId = req.body.pacienteId;
+    console.log("Actualizo el paciente con ID: " + pacienteId);
     
     //Obtengo el usuario por el ID y devuelvo los datos de emergencia
     try {
+        console.log('Verifico los demas datos');
+        console.log(req.body);
         models.Paciente.update(
             { 
                 emergencyData: req.body.emergencyData,
                 bloodType: req.body.bloodType,
                 birthDate: req.body.birthDate
              },
-            { where: { id: userId } }
+            { where: { id: pacienteId } }
           )
           res.status(200).send('Paciente actualizado');
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send({"message": "Error al actualizar los datos del paciente"});
     }
 }
 
 async function searchUserByCuit(cuit){
-    return await models.User.findOne({select:{id,nombre,email,phone}},{where: {cuit: cuit}});
+    const usuario = await models.User.findOne({where: {cuit: cuit}});
+    return usuario;
 }

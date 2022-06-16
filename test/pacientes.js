@@ -1,7 +1,7 @@
 const axios = require("axios");
 const chai = require("chai");
 const { assert } = chai;
-const { randFirstName,randLastName,randPhoneNumber,randPassword,randEmail,randNumber, randStreetName, randCity, randCountry} = require('@ngneat/falso');
+const { randFirstName,randLastName,randPhoneNumber,randPassword,randEmail,randNumber, randPastDate, randStreetName, randCity, randCountry, randText} = require('@ngneat/falso');
 
 let usuario = {
   name: randFirstName()+' '+randLastName(),
@@ -38,32 +38,71 @@ describe("Creación Paciente", () => {
   });
 });
 
-describe("Elimino el paciente creado en el paso anterior buscandolo por el cuit", () => {
-  it("retorna 200 si el paciente se eliminó", (done) => {
+//Declaro pacienteId para usarlo en las pruebas siguientes
+let pacienteId;
+
+describe("Obtengo el ID de paciente con el CUIT generado en el metodo anterior para realizar las demas acciones", () => {
+  it("retorna 200 si el paciente se encontro por el CUIT", (done) => {
     axios({
       method: "get",
       url: "http://localhost:5555/pacientes/getByCuit/"+usuario.cuit
-    }).then(function(resultado){
-      console.log("datos obtenidos:");
-      console.log(usuario);
-      assert.equal(response.status, 201);
+    }).then(function(response){
+      assert.equal(response.status, 200);
+      if(response.data.id){
+        pacienteId = response.data.id;
+      }
       done();
-      //Si el usuario existe lo elimino
     }).catch((err) => {
-      assert.equal(err.response.data.message, "No se encontró el paciente con el cuit");
+      assert.equal(err.response.data.message, "No se encontró el usuario con el cuit");
       done();
     });
+  });
+});
 
-    // axios({
-      // method: "delete",
-      // url: "http://localhost:5555/pacientes/add",
-      // data: usuario,
-    // }).then((response) => {
-    //   assert.equal(response.status, 201);
-    //   done();
-    // }).catch((err) => {
-    //   assert.equal(err.response.status, 201);
-    //   done();
-    // });
+// const objActualizacionDatosEmergencia = {
+//   pacienteId: pacienteId,
+//   emergencyData: JSON.stringify(randText()),
+//   bloodType: 'A+',
+//   birthDate: randPastDate()
+// }
+
+// describe("Actualizo los datos de emergencia del paciente", () => {
+//   it("Retorna 200 si se pudo actualizar los datos de emergencia", (done) => {
+//     axios({
+//       method: "patch",
+//       url: "http://localhost:5555/pacientes/updateProfile",
+//       data: objActualizacionDatosEmergencia,
+//     }).then(function(response){
+//       assert.equal(response.status, 200);
+//       done();
+//     }).catch((err) => {
+//       assert.equal(err.response.data.message, "Error al actualizar los datos del paciente");
+//       done();
+//     });
+//   });  
+// });
+
+describe("Obtengo el ID de paciente con el CUIT generado en el metodo anterior y lo elimino", () => {
+  it("Retorna 200 si el paciente pudo eliminarse", (done) => {
+    axios({
+      method: "delete",
+      url: "http://localhost:5555/pacientes/deleteById/"+pacienteId
+    }).then(function(response){
+      assert.equal(response.status, 200);
+      done();
+    }).catch((err) => {
+      assert.equal(err.response.data.message, "Paciente inexistente");
+      done();
+    });
+  });
+  
+  it("Retorna error si el paciente no pudo eliminarse", (done) => {
+    axios({
+      method: "delete",
+      url: "http://localhost:5555/pacientes/deleteById/"+pacienteId
+    }).catch((err) => {
+      assert.equal(err.response.data.message, "Paciente inexistente");
+      done();
+    });
   });
 });
